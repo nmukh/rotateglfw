@@ -1,0 +1,4 @@
+glfw==2.7.0
+numpy==2.1.1
+pillow==10.4.0
+PyOpenGL==3.1.7
