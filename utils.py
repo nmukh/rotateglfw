@@ -35,7 +35,7 @@ def loadTexture(filename: str) -> Optional[int]:
     if not texture:
         print(f"Failed to generate texture for {filename}")
         return None
-    
+
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     glBindTexture(GL_TEXTURE_2D, texture)
 
@@ -71,7 +71,7 @@ def perspective(fov: Union[int, float], aspect: float, zNear: float, zFar: float
     ], dtype=np.float32)
 
 
-def lookAt(eye: Union[List[float], np.ndarray], center: Union[List[float], np.ndarray], up: Union[List[float], np.ndarray]) -> np.ndarray:
+def lookAt(eye: np.ndarray, center: np.ndarray, up: np.ndarray) -> np.ndarray:
     """Returns the view matrix equivalent to gluLookAt.
 
     Args:
