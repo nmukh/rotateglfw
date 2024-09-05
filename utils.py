@@ -100,3 +100,44 @@ def lookAt(eye: Union[List[float], np.ndarray], center: Union[List[float], np.nd
     return m @ t
 
 
+def loadShaders(vertex_shader_source: str, fragment_shader_source: str) -> int:
+    """Load vertex and fragment shaders from strings and create a shader program.
+
+    Args:
+        vertex_shader_source (str): The source code of the vertex shader.
+        fragment_shader_source (str): The source code of the fragment shader.
+
+    Returns:
+        int: The shader program ID.
+
+    Raises:
+        RuntimeError: If shader compilation or program linking fails.
+    """
+    # Compile vertex shader
+    vertex_shader = compileShader(vertex_shader_source, GL_VERTEX_SHADER)
+    # Compile fragment shader
+    fragment_shader = compileShader(fragment_shader_source, GL_FRAGMENT_SHADER)
+
+    # Create the program object
+    program = glCreateProgram()
+    if not program:
+        raise RuntimeError('glCreateProgram failed!')
+
+    # Attach shaders
+    glAttachShader(program, vertex_shader)
+    glAttachShader(program, fragment_shader)
+
+    # Link the program
+    glLinkProgram(program)
+
+    # Check the link status
+    linked = glGetProgramiv(program, GL_LINK_STATUS)
+    if not linked:
+        info_len = glGetProgramiv(program, GL_INFO_LOG_LENGTH)
+        info_log = ""
+        if info_len > 1:
+            info_log = glGetProgramInfoLog(program, info_len, None)
+        glDeleteProgram(program)
+        raise RuntimeError(f"Error linking program:\n{info_log}\n")
+
+    return program
