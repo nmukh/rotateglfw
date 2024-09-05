@@ -61,8 +61,8 @@ def perspective(fov: Union[int, float], aspect: float, zNear: float, zFar: float
     Returns:
         np.ndarray: The perspective projection matrix.
     """
-    fovR = math.radians(fov)
-    f = 1.0 / math.tan(fovR / 2.0)
+    fovR = np.radians(fov)
+    f = 1.0 / np.tan(fovR / 2.0)
     return np.array([
         [f / aspect, 0.0, 0.0, 0.0],
         [0.0, f, 0.0, 0.0],
