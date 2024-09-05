@@ -31,6 +31,11 @@ def loadTexture(filename: str) -> Optional[int]:
         return None
 
     texture = glGenTextures(1)
+
+    if not texture:
+        print(f"Failed to generate texture for {filename}")
+        return None
+    
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     glBindTexture(GL_TEXTURE_2D, texture)
 
