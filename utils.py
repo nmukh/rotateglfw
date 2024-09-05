@@ -11,7 +11,7 @@ from OpenGL.GL import *
 from OpenGL.GL.shaders import *
 from PIL import Image
 import math
-from typing import Optional
+from typing import Optional, Union
 
 def loadTexture(filename: str) -> Optional[int]:
     """Load OpenGL 2D texture from given image file.
@@ -41,3 +41,24 @@ def loadTexture(filename: str) -> Optional[int]:
                  0, GL_RGBA, GL_UNSIGNED_BYTE, imgData)
     glBindTexture(GL_TEXTURE_2D, 0)
     return texture
+
+def perspective(fov: Union[int, float], aspect: float, zNear: float, zFar: float) -> np.ndarray:
+    """Returns the perspective projection matrix equivalent to gluPerspective.
+
+    Args:
+        fov (Union[int, float]): Field of view in degrees.
+        aspect (float): Aspect ratio of the view (width/height).
+        zNear (float): Near clipping plane.
+        zFar (float): Far clipping plane.
+
+    Returns:
+        np.ndarray: The perspective projection matrix.
+    """
+    fovR = math.radians(fov)
+    f = 1.0 / math.tan(fovR / 2.0)
+    return np.array([
+        [f / aspect, 0.0, 0.0, 0.0],
+        [0.0, f, 0.0, 0.0],
+        [0.0, 0.0, (zFar + zNear) / (zNear - zFar), -1.0],
+        [0.0, 0.0, (2.0 * zFar * zNear) / (zNear - zFar), 0.0]
+    ], dtype=np.float32)
