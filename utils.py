@@ -82,17 +82,12 @@ def lookAt(eye: np.ndarray, center: np.ndarray, up: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: The view matrix.
     """
-    eye = np.array(eye, dtype=np.float32)
-    center = np.array(center, dtype=np.float32)
-    up = np.array(up, dtype=np.float32)
-
-    forward = center - eye
-    forward /= np.linalg.norm(forward)
-
-    up /= np.linalg.norm(up)
-
+    forward = np.linalg.norm(center - eye)
     side = np.cross(forward, up)
     up = np.cross(side, forward)
+
+    side = side / np.linalg.norm(side)
+    up = up / np.linalg.norm(up)
 
     m = np.identity(4, dtype=np.float32)
     m[0, :3] = side
