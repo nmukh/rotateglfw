@@ -224,3 +224,23 @@ class RenderWindow:
             glfw.destroy_window(self.window)
         glfw.terminate()
         logging.info("GLFW terminated")
+
+
+def main():
+    """Main function to start the application."""
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
+    render_window = None
+    try:
+        render_window = RenderWindow()
+        render_window.run()
+    except RuntimeError as e:
+        logging.error(f"An error occurred in the application: {e}")
+    finally:
+        if render_window:
+            render_window.cleanup()
+
+
+# Call main
+if __name__ == '__main__':
+    main()
