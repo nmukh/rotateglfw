@@ -167,13 +167,23 @@ class RenderWindow:
         glfw.swap_interval(1)  # Enable VSync
         logging.info("OpenGL context created and VSync enabled")
 
-    def framebuffer_size_callback(self, window, width, height):
-        """GLFW framebuffer resize callback."""
-        pass
+    def framebuffer_size_callback(self, window: glfw._GLFWwindow, width: int, height: int):
+        """Handle framebuffer size changes."""
+        if height == 0:
+            height = 1  # Avoid division by zero, set height to 1
+        glViewport(0, 0, width, height)
+        self.width, self.height = width, height
+        self.aspect = width / float(height)
 
-    def key_callback(self, window, key, scancode, action, mods):
-        """GLFW key callback."""
-        pass
+    def on_keyboard(self, window, key, scancode, action, mods):
+        """Handle keyboard input."""
+        if action == glfw.PRESS:
+            if key == glfw.KEY_ESCAPE:
+                logging.info("ESC pressed, closing window.")
+                glfw.set_window_should_close(self.window, True)
+            else:
+                logging.info(f"Key {key} pressed.")
+
 
     def render(self, delta_time: float):
         """Render the scene."""
