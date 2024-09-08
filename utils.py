@@ -82,22 +82,26 @@ def lookAt(eye: np.ndarray, center: np.ndarray, up: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: The view matrix.
     """
-    forward = np.linalg.norm(center - eye)
-    side = np.cross(forward, up)
-    up = np.cross(side, forward)
+    eye = np.array(eye, dtype=np.float32)
+    center = np.array(center, dtype=np.float32)
+    up = np.array(up, dtype=np.float32)
 
-    side = side / np.linalg.norm(side)
-    up = up / np.linalg.norm(up)
+    forward = center - eye
+    forward /= np.linalg.norm(forward)
+    
+    right = np.cross(forward, up)
+    right /= np.linalg.norm(right)
+    
+    up = np.cross(right, forward)
 
-    m = np.identity(4, dtype=np.float32)
-    m[0, :3] = side
-    m[1, :3] = up
-    m[2, :3] = -forward
+    lookAtMatrix = np.array([
+        [right[0], up[0], -forward[0], 0],
+        [right[1], up[1], -forward[1], 0],
+        [right[2], up[2], -forward[2], 0],
+        [-np.dot(right, eye), -np.dot(up, eye), np.dot(forward, eye), 1]
+    ], dtype=np.float32)
 
-    t = np.identity(4, dtype=np.float32)
-    t[:3, 3] = -eye
-
-    return m @ t
+    return lookAtMatrix
 
 
 def loadShaders(vertex_shader_source: str, fragment_shader_source: str) -> int:
