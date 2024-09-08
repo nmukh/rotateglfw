@@ -108,38 +108,43 @@ class Scene:
     def step(self):
         """Advance the scene's animation."""
         self.t = (self.t + 1) % 360
-        
-        
+
+
 class RenderWindow:
     """GLFW Rendering window class"""
-    
+
     def __init__(self, width: int = 800, height: int = 600, title: str = 'rotateglfw'):
         """Initialize the rendering window."""
         pass
-    
+
     def configure_glfw(self):
         """Configure GLFW settings."""
         pass
-    
+
     def configure_opengl(self):
         """Configure OpenGL settings."""
         pass
-    
+
     def create_context(self):
         """Create the rendering context."""
         pass
-    
+
+    def framebuffer_size_callback(self, window, width, height):
+        """GLFW framebuffer resize callback."""
+        pass
+
+    def key_callback(self, window, key, scancode, action, mods):
+        """GLFW key callback."""
+        pass
+
     def render(self):
         """Render the scene."""
         pass
-    
+
     def run(self):
         """Run the rendering loop."""
         pass
-    
+
     def cleanup(self):
         """Cleanup GLFW resources."""
         pass
-    
-    
-    
