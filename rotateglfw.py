@@ -21,7 +21,25 @@ class Scene:
     """OpenGL 3D scene class"""
 
     def __init__(self, vertex_data=None):
-        pass
+        # Load shaders and set up shader uniforms
+        self.init_shaders()
+
+        # Initialize buffers
+        if vertex_data is None:
+            vertex_data = np.array([-0.5, -0.5, 0.0,
+                                    0.5, -0.5, 0.0,
+                                    -0.5, 0.5, 0.0,
+                                    0.5, 0.5, 0.0], np.float32)
+        self.init_buffers(vertex_data)
+
+        # Load textures
+        self.init_textures()
+
+        # Time variable for animation
+        self.t = 0
+
+        # Toggle for showing the circle
+        self.showCircle = False
 
     def init_shaders(self):
         """Load shaders and get uniform locations."""
@@ -90,4 +108,3 @@ class Scene:
     def step(self):
         """Advance the scene's animation."""
         self.t = (self.t + 1) % 360
-
