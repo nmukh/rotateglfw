@@ -67,9 +67,25 @@ class Scene:
             logging.error("Failed to load texture")
             raise RuntimeError("Failed to load texture")
 
-    def render(self):
+    def render(self, pMatrix, mvMatrix):
         """Render the scene."""
-        pass
+        glUseProgram(self.program)
+
+        # Set the uniform values for shaders
+        glUniformMatrix4fv(self.pMatrixUniform, 1, GL_FALSE, pMatrix)
+        glUniformMatrix4fv(self.mvMatrixUniform, 1, GL_FALSE, mvMatrix)
+        glUniform1f(self.uThetaLoc, math.radians(self.t))
+        glUniform1i(self.showCircleLoc, self.showCircle)
+
+        # Bind and render texture
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.texId)
+        glUniform1i(self.tex2D, 0)
+
+        # Bind VAO and draw
+        glBindVertexArray(self.vao)
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
+        glBindVertexArray(0)
 
     def step(self):
         """Update the scene."""
