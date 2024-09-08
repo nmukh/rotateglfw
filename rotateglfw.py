@@ -115,7 +115,33 @@ class RenderWindow:
 
     def __init__(self, width: int = 800, height: int = 600, title: str = 'rotateglfw'):
         """Initialize the rendering window."""
-        pass
+        self.width = width
+        self.height = height
+        self.aspect = width / float(height)
+        self.title = title
+        self.window: Optional[glfw._GLFWwindow] = None
+
+        logging.info("Initializing GLFW")
+        if not glfw.init():
+            logging.error("Failed to initialize GLFW")
+            raise RuntimeError("Failed to initialize GLFW")
+
+        self.configure_glfw()
+        self.window = glfw.create_window(
+            self.width, self.height, self.title, None, None)
+        if not self.window:
+            logging.error("Failed to create GLFW window")
+            glfw.terminate()
+            raise RuntimeError("Failed to create GLFW window")
+
+        self.create_context()
+        self.configure_opengl()
+
+        self.scene = Scene()
+        glfw.set_framebuffer_size_callback(
+            self.window, self.framebuffer_size_callback)
+        glfw.set_key_callback(self.window, self.on_keyboard)
+        atexit.register(self.cleanup)
 
     def configure_glfw(self):
         """Configure GLFW settings."""
@@ -149,13 +175,38 @@ class RenderWindow:
         """GLFW key callback."""
         pass
 
-    def render(self):
+    def render(self, delta_time: float):
         """Render the scene."""
-        pass
+        self.width, self.height = glfw.get_framebuffer_size(self.window)
+        self.aspect = self.width / float(self.height)
 
-    def run(self):
-        """Run the rendering loop."""
-        pass
+        glViewport(0, 0, self.width, self.height)
+        pMatrix = utils.perspective(45.0, self.aspect, 0.1, 100.0)
+        mvMatrix = utils.lookAt(
+            [0.0, 0.0, -2.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0])
+
+        self.scene.render(pMatrix, mvMatrix)
+        self.scene.step()
+
+    def run(self, target_fps: int = 60):
+        """Main rendering loop with frame rate limiting."""
+        previous_time = glfw.get_time()
+        frame_time = 1.0 / target_fps
+
+        while not glfw.window_should_close(self.window):
+            current_time = glfw.get_time()
+            delta_time = current_time - previous_time
+
+            # Catch up with missed frames
+            while delta_time >= frame_time:
+                previous_time += frame_time
+                delta_time -= frame_time
+
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+                self.render(frame_time)
+
+                glfw.swap_buffers(self.window)
+                glfw.poll_events()
 
     def cleanup(self):
         """Cleanup GLFW resources."""
