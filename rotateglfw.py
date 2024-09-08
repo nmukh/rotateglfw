@@ -61,8 +61,11 @@ class Scene:
         glBindVertexArray(0)
 
     def init_textures(self):
-        """Load textures."""
-        pass
+        """Load texture for the scene."""
+        self.texId = utils.loadTexture('emoji.png')
+        if self.texId is None:
+            logging.error("Failed to load texture")
+            raise RuntimeError("Failed to load texture")
 
     def render(self):
         """Render the scene."""
