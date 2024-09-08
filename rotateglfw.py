@@ -34,31 +34,40 @@ class Scene:
             self.program = utils.loadShaders(
                 vertex_shader_src, fragment_shader_src)
             glUseProgram(self.program)
-            self.pMatrixUniform = glGetUniformLocation(self.program, b'uPMatrix')
-            self.mvMatrixUniform = glGetUniformLocation(self.program, b'uMVMatrix')
+            self.pMatrixUniform = glGetUniformLocation(
+                self.program, b'uPMatrix')
+            self.mvMatrixUniform = glGetUniformLocation(
+                self.program, b'uMVMatrix')
             self.tex2D = glGetUniformLocation(self.program, b'tex2D')
             self.uThetaLoc = glGetUniformLocation(self.program, b'uTheta')
-            self.showCircleLoc = glGetUniformLocation(self.program, b'showCircle')
+            self.showCircleLoc = glGetUniformLocation(
+                self.program, b'showCircle')
         except Exception as e:
             logging.error(f"Error loading shaders: {e}")
             raise
-    
+
     def init_buffers(self, vertex_data):
         """Set up VAO and buffers."""
-        pass
-    
+        self.vao = glGenVertexArrays(1)
+        glBindVertexArray(self.vao)
+
+        self.vertexBuffer = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer)
+        glBufferData(GL_ARRAY_BUFFER, 4 * len(vertex_data),
+                     vertex_data, GL_STATIC_DRAW)
+        glEnableVertexAttribArray(0)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+
+        glBindVertexArray(0)
+
     def init_textures(self):
         """Load textures."""
-        pass    
-    
+        pass
+
     def render(self):
         """Render the scene."""
-        pass    
-    
+        pass
+
     def step(self):
         """Update the scene."""
         pass
-    
-
-    
-    
