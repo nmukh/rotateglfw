@@ -119,15 +119,27 @@ class RenderWindow:
 
     def configure_glfw(self):
         """Configure GLFW settings."""
-        pass
+        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
+        glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL_TRUE)
+        glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 
     def configure_opengl(self):
         """Configure OpenGL settings."""
-        pass
+        glViewport(0, 0, self.width, self.height)
+        glEnable(GL_DEPTH_TEST)
+        glClearColor(0.5, 0.5, 0.5, 1.0)
 
     def create_context(self):
-        """Create the rendering context."""
-        pass
+        """Create the OpenGL context."""
+        if not self.window:
+            logging.error("Cannot make context current, no window available.")
+            raise RuntimeError(
+                "Cannot make context current, no window available.")
+
+        glfw.make_context_current(self.window)
+        glfw.swap_interval(1)  # Enable VSync
+        logging.info("OpenGL context created and VSync enabled")
 
     def framebuffer_size_callback(self, window, width, height):
         """GLFW framebuffer resize callback."""
