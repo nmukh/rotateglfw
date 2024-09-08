@@ -88,5 +88,6 @@ class Scene:
         glBindVertexArray(0)
 
     def step(self):
-        """Update the scene."""
-        pass
+        """Advance the scene's animation."""
+        self.t = (self.t + 1) % 360
+
