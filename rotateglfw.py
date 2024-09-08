@@ -209,5 +209,8 @@ class RenderWindow:
                 glfw.poll_events()
 
     def cleanup(self):
-        """Cleanup GLFW resources."""
-        pass
+        """Cleanup resources."""
+        if self.window:
+            glfw.destroy_window(self.window)
+        glfw.terminate()
+        logging.info("GLFW terminated")
