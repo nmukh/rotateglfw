@@ -103,6 +103,8 @@ class Scene:
         # Bind and render texture
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.texId)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
         glUniform1i(self.tex2D, 0)
 
         # Bind VAO and draw
