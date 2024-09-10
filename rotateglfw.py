@@ -15,12 +15,16 @@ import utils
 import math
 
 import numpy as np
-
+import argparse
 
 class Scene:
     """OpenGL 3D scene class"""
 
-    def __init__(self, vertex_data=None):
+    def __init__(self, vertex_data=None, n=4):
+        
+        # Store the tiling factor
+        self.n = math.floor(n/4)
+        
         # Load shaders and set up shader uniforms
         self.init_shaders()
 
@@ -62,6 +66,7 @@ class Scene:
             self.mvMatrixUniform = glGetUniformLocation(
                 self.program, b'uMVMatrix')
             self.tex2D = glGetUniformLocation(self.program, b'tex2D')
+            self.uTilingFactor = glGetUniformLocation(self.program, b'uTilingFactor')
             self.uThetaLoc = glGetUniformLocation(self.program, b'uTheta')
             self.showCircleLoc = glGetUniformLocation(
                 self.program, b'showCircle')
@@ -103,6 +108,7 @@ class Scene:
         glUniformMatrix4fv(self.pMatrixUniform, 1, GL_FALSE, pMatrix)
         glUniformMatrix4fv(self.mvMatrixUniform, 1, GL_FALSE, mvMatrix)
         glUniform1f(self.uThetaLoc, math.radians(self.t))
+        glUniform1f(self.uTilingFactor, self.n)  # Pass the tiling factor (n)
         glUniform1i(self.showCircleLoc, self.showCircle)
 
         # Bind and render texture
@@ -125,7 +131,7 @@ class Scene:
 class RenderWindow:
     """GLFW Rendering window class"""
 
-    def __init__(self, width: int = 800, height: int = 600, title: str = 'rotateglfw'):
+    def __init__(self, width: int = 800, height: int = 600, title: str = 'rotateglfw', n: int = 4):
         """Initialize the rendering window."""
         self.width = width
         self.height = height
@@ -149,7 +155,7 @@ class RenderWindow:
         self.create_context()
         self.configure_opengl()
 
-        self.scene = Scene()
+        self.scene = Scene(n=n)
         glfw.set_framebuffer_size_callback(
             self.window, self.framebuffer_size_callback)
         glfw.set_key_callback(self.window, self.on_keyboard)
@@ -242,9 +248,13 @@ def main():
     """Main function to start the application."""
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description='RotateGLFW with customizable tiling.')
+    parser.add_argument('-n', type=int, default=4, help='Number of tiles along each axis (n x n tiling).')
+    args = parser.parse_args()
     render_window = None
     try:
-        render_window = RenderWindow()
+        render_window = RenderWindow(n=args.n)
         render_window.run()
     except RuntimeError as e:
         logging.error(f"An error occurred in the application: {e}")
