@@ -26,10 +26,15 @@ class Scene:
 
         # Initialize buffers
         if vertex_data is None:
-            vertex_data = np.array([-0.5, -0.5, 0.0,
-                                    0.5, -0.5, 0.0,
-                                    -0.5, 0.5, 0.0,
-                                    0.5, 0.5, 0.0], np.float32)
+            # Vertex data with positions and texture coordinates
+            vertex_data = np.array([
+                # Positions        # Texture Coordinates
+                -0.5, -0.5, 0.0,    0.0, 0.0,  # Bottom-left
+                0.5, -0.5, 0.0,    4.0, 0.0,  # Bottom-right
+                -0.5,  0.5, 0.0,    0.0, 4.0,  # Top-left
+                0.5,  0.5, 0.0,    4.0, 4.0   # Top-right
+            ], dtype=np.float32)
+
         self.init_buffers(vertex_data)
 
         # Load textures
