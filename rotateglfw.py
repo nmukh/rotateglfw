@@ -78,8 +78,13 @@ class Scene:
         glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer)
         glBufferData(GL_ARRAY_BUFFER, 4 * len(vertex_data),
                      vertex_data, GL_STATIC_DRAW)
+        
+        
+        # Set vertex attribute pointers
         glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * 4, ctypes.c_void_p(0))  # Position
+        glEnableVertexAttribArray(1)
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * 4, ctypes.c_void_p(12)) # Texture Coord
 
         glBindVertexArray(0)
 
