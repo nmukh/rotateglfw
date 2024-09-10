@@ -35,7 +35,7 @@ To run this project, you need the following:
 
 - To run the program
     ```bash
-    python rotateglfw.py
+    python rotateglfw.py -n [number of repetitions]
     
 
 - Watch the mild mannered 2D emoji ![2D emoji](emoji.png)
